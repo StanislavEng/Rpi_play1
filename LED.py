@@ -1,11 +1,16 @@
 import RPi.GPIO as GPIO
 import time
 
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(11,GPIO.OUT)
+green = 11
 
-while True:
-	GPIO.output(11, True)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(green,GPIO.OUT)
+
+blink_num = input("How many times do you want to blink?")
+#while True:
+for i in (0,blink_num):
+	GPIO.output(green, True)
 	time.sleep(1)
-	GPIO.output(11,False)
+	GPIO.output(green,False)
 	time.sleep(1)
+GPIO.cleanup()
