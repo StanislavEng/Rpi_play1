@@ -1,6 +1,11 @@
 #include <Wire.h>
 
-const int LED = 13;
+const byte RED = 13;
+const byte BLU = 7;
+const byte YEL = 4;
+const byte col[] = {YEL,BLU,RED};
+const byte LEDMask = 14;
+const byte ONOFFMask = 1;
 
 void setup() {
   // put your setup code here, to run once:
@@ -9,9 +14,11 @@ void setup() {
   
   Wire.onReceive(receiveEvent);
 
-
-  pinMode(LED,OUTPUT);
-  digitalWrite(LED,LOW);
+  for (byte i = 0; i < sizeof(col)/sizeof(col[0]);i++){
+    byte LED = col[i];
+    pinMode(LED,OUTPUT);
+    digitalWrite(LED,LOW);
+  }
 
 }
 
@@ -19,47 +26,27 @@ void loop() {
   // put your main code here, to run repeatedly:
   delay(100);
 }
-byte d;
+
 void receiveEvent(int howMany){
-  while(Wire.available()==0){
-    byte d;
-    byte c = Wire.read();
-    switch (c)
+  while(Wire.available()){
+    byte I2C = Wire.read();
+    byte LED = I2C & LEDMask;
+    byte ONOFF = I2C & ONOFFMask;
+    switch (LED)
     {
-      case 1: 
-      {
-        while(Wire.available()==0){
-          Serial.println("A");           
-          d = Wire.read();
-        }
-        digitalWrite(LED,d); 
+      case 2: 
+        digitalWrite(RED,ONOFF); 
         break;
-      }
-      case 2:
-      {
-        while(Wire.available()==0){
-          Serial.println("B"); 
-          d = Wire.read();
-        }
-        digitalWrite(LED,d);
+      case 4:
+        digitalWrite(BLU,ONOFF);
         break;
-      }
-      case 3:
-      {
-        while(Wire.available()==0){
-          Serial.println("C"); 
-          d = Wire.read();
-        }
-        digitalWrite(LED,d); 
+      case 8:
+        digitalWrite(YEL,ONOFF); 
         break;
-      }
       default:
         Serial.println("Nope");
     }
-    Serial.println("First");
-    Serial.println(c);
-    Serial.println("Second");
-    Serial.println(d);
+
     //digitalWrite(LED,c);  
   }
 }
