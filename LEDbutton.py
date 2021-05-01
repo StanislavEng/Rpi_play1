@@ -19,7 +19,7 @@ b1m = False # the memory state of button 1 (was last press for on or off)
 b2m = False # the memory state of button 2
 
 try:
-    while True:
+    while True: # my solution before checking tutorial
         if GPIO.input(b1) == 0:
             print ("Button one was pressed")
             b1m = not b1m # changes state of memory
